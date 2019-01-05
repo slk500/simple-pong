@@ -4,7 +4,9 @@ class Ball extends createjs.Shape {
 	super();
 	this.x = 300;
 	this.y = 200;
-	this.graphics.beginFill("#ff0000").drawCircle(0, 0, 20);
+	this.radius = 20;
+	this.right = true;
+	this.graphics.beginFill("#ff0000").drawCircle(0, 0, this.radius);
     }   
 }
 
@@ -12,6 +14,9 @@ class Ball extends createjs.Shape {
 class Game{
     
     constructor(ball){
+	this.screenWidth = 800;
+	this.screenHeight = 600;
+	
 	this.ball = ball;
 	this.canvas = document.getElementById("game-canvas");
 	this.stage = new createjs.Stage(this.canvas);
@@ -29,12 +34,20 @@ class Game{
 	this.textY = new createjs.Text('Y: ' + this.ball.x, "40px Arial", "red");
 	this.textY.x = this.textY.y = 150;
 	this.textY.textBaseline = "alphabetic";
-	this.stage.addChild(this.textY);
+	this.stage.addChild(this.textY); 
     }
 
     update() {
 
-	if(this.ball.x >= 400){
+	if(this.ball.x >= this.screenWidth){
+	    this.ball.right = false;
+	}
+
+	if(this.ball.x <= 0){
+	    this.ball.right = true;
+	}
+	
+	if(this.ball.right == true){
 	    this.ball.x += 2;
 	}else{
 	    this.ball.x -= 2;
