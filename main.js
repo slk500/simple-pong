@@ -9,8 +9,8 @@ class Ball extends createjs.Shape
 	this.graphics.beginFill("#ff0000").drawCircle(0, 0, this.radius);
 
 	this.velocity = {
-	    x: 2,
-	    y: 2
+	    x: 6,
+	    y: 6
 	};
 	
 	this.on("tick", this.tick);
@@ -30,19 +30,24 @@ class Paddle extends createjs.Shape {
 	this.y = 50;
 	this.graphics.beginFill('green').drawRect(this.x, this.y, 20, 100);
 
+	this.velocity = {
+	    x: 6,
+	    y: 6
+	};
+	
 	this.leftKeyDown = false;
 	this.rightKeyDown = false;
 
 	document.addEventListener('keydown', this.move.bind(this));
+	document.addEventListener('keyup', this.stop.bind(this));
 	
 	this.on("tick", this.tick);
     }
 
     tick(){
-	if(this.leftKeyDown) this.y -= 1;
-	if(this.rightKeyDown) this.y += 1;
+	if(this.leftKeyDown) this.y -= this.velocity.y;
+	if(this.rightKeyDown) this.y += this.velocity.y;
     }
-    
 
     move(e) {
 	switch(e.keyCode) {
@@ -54,6 +59,18 @@ class Paddle extends createjs.Shape {
 	    break;
 	}
     }
+
+     stop(e) {
+	switch(e.keyCode) {
+	case 37: //left	
+	    this.leftKeyDown = false;
+	    break;
+	case 39: // right 
+	    this.rightKeyDown = false;
+	    break;
+	}
+    }
+    
 }
 
 
@@ -86,32 +103,29 @@ class Game{
 	this.textY.textBaseline = "alphabetic";
 	this.stage.addChild(this.textY);
 
-	this.stage.addChild(this.paddle);
+	this.stage.addChild(this.paddle); 
     }
 
-    update() {
-
+    wallCollision() {
 	if((this.ball.x + this.ball.radius) >= this.rightEdge){
 	    this.ball.right = false;
 	}
-
+	
 	if(this.ball.x - this.ball.radius <= 0){
 	    this.ball.right = true;
-	}
-	
+	}	
+    }
+
+
+    debbugText() {
 	this.textX.text = 'X: ' +  this.ball.x; 
 	this.textY.text = 'Y: ' +  this.ball.y;
     }
 
-    
+    update() {
 
-    updateScore(){
-    }
-
-    collision() {
-	if(this.ball.x >= 300){
-	    
-	}
+	this.wallCollision();
+ 	this.debbugText();
     }
 }
 
